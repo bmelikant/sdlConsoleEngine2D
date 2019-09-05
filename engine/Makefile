@@ -1,5 +1,5 @@
-CFLAGS:=$(shell pkg-config --cflags sdl2) -Iinclude -I/usr/include/SDL2
-LDFLAGS:=$(shell pkg-config --libs sdl2)
+CFLAGS:=$(shell pkg-config --cflags sdl2 SDL2_ttf) -Iinclude -I/usr/include/SDL2
+LDFLAGS:=$(shell pkg-config --libs sdl2 SDL2_ttf)
 
 ENGINE_ARCHIVE := libSDLEngine.a
 ENGINE_OBJECTS:=\

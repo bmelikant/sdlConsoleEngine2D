@@ -1,11 +1,11 @@
-CFLAGS:=$(shell pkg-config --cflags sdl2) -I../engine/include
-LDFLAGS:=$(shell pkg-config --libs sdl2)
+CFLAGS:=$(shell pkg-config --cflags sdl2 SDL2_ttf) -I../engine/include
+LDFLAGS:=$(shell pkg-config --libs sdl2 SDL2_ttf)
 
 all: engine-demo
 
 .PHONY: all clean
 
-demo: main.o
+engine-demo: main.o
 	$(CXX) -o $@ $< ../engine/libSDLEngine.a $(LDFLAGS)
 
 %.o: %.cpp
