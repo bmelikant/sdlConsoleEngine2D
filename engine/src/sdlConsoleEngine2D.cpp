@@ -4,18 +4,6 @@
 
 using namespace std;
 
-static const _rgb_t colorPalette[8] = {
-	{0,0,0,255},
-	{255,0,0,255},
-	{0,255,0,255},
-	{0,0,255,255},
-	{127,127,127,255},
-	{127,0,0,255},
-	{0,127,0,255},
-	{0,0,127,255}
-};
-static int nPaletteIndex = 0;
-
 /**  static helper calculation methods */
 static double getElapsedTimeMs(Uint64 nCurrentTimestamp, Uint64 nLastTimestamp) {
 	return (double)((nCurrentTimestamp - nLastTimestamp)*1000) / SDL_GetPerformanceFrequency();
@@ -62,6 +50,9 @@ int sdlConsoleEngine2D::onExecute() {
 
 		// compute the current FPS
 		doFrameRate(fElapsedTime);
+		// clear the current renderer
+		doClearRender();
+
 		// check for events
 		while (SDL_PollEvent(&event)) {
 			onEvent(&event);
@@ -127,16 +118,6 @@ bool sdlConsoleEngine2D::onInit() {
 void sdlConsoleEngine2D::onEvent(SDL_Event *event) {
 	if (event->type == SDL_QUIT) {
 		running = false;
-	} else if (event->type == SDL_KEYUP) {
-		if (event->key.keysym.scancode == SDL_SCANCODE_A) {
-			if (nPaletteIndex < 7) nPaletteIndex++;
-			else nPaletteIndex = 0;
-			refresh = true;
-		} else if (event->key.keysym.scancode == SDL_SCANCODE_D) {
-			if (nPaletteIndex > 0) nPaletteIndex--;
-			else nPaletteIndex = 7;
-			refresh = true;
-		}
 	}
 }
 
@@ -145,7 +126,6 @@ void sdlConsoleEngine2D::onEvent(SDL_Event *event) {
  * should perform their work such as updating AI
  */
 void sdlConsoleEngine2D::onLoop(double fDeltaTime) {
-	renderer.fillBackground(colorPalette[nPaletteIndex]);
 }
 
 /**
@@ -218,4 +198,8 @@ void sdlConsoleEngine2D::lockFrameRate(Uint64 nLastTimeStamp) {
 			}
 		}
 	}
+}
+
+void sdlConsoleEngine2D::doClearRender() {
+	renderer.clear();
 }

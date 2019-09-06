@@ -4,19 +4,26 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
-struct COLOR_RGB {
-	int r,g,b,a;
+struct POINT {
+	float x;
+	float y;
 };
 
-using _rgb_t = struct COLOR_RGB;
+using Point = struct POINT;
+using Color = SDL_Color;
+
+const Color COLOR_RED = {255,0,0,255};
+const Color COLOR_GREEN = {0,255,0,255};
+const Color COLOR_BLUE = {0,0,255,255};
+const Color COLOR_GREY = {128,128,128,0};
 
 class sdlConsoleEngineRenderer2D {
 private:
 	SDL_Renderer *consoleRenderer;
 	TTF_Font *font;
 
-	_rgb_t backColor;
-	_rgb_t foreColor;
+	Color backColor;
+	Color foreColor;
 
 public:
 	sdlConsoleEngineRenderer2D();
@@ -28,9 +35,25 @@ public:
 	void update();
 	void clear();
 
-	_rgb_t fillBackground(_rgb_t newBackColor);
+	Color setBackColor(Color newColor);
+	Color setForeColor(Color newColor);
+
+	Color fillBackground(Color newBackColor);
 
 	void drawText(const char *text, int x, int y);
+
+	void drawLine(Point src, Point dst);
+	void drawLine(Point src, Point dest, Color color);
+
+	void drawTriangle(Point a, Point b, Point c);
+	void drawTriangle(Point a, Point b, Point c, Color color);
+	void fillTriangle(Point a, Point b, Point c, Color color);
+
+	void fillFlatBottomTriangle(Point a, Point b, Point c, Color color);
+	void fillFlatTopTriangle(Point a, Point b, Point c, Color color);
+
+private:
+
 };
 
 #endif

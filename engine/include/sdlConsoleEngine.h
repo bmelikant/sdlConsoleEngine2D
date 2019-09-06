@@ -34,9 +34,8 @@ public:
 
 public:
 	bool onInit();
-	void onEvent(SDL_Event *);
+	virtual void onEvent(SDL_Event *);
 	virtual void onLoop(double fDeltaTime);
-	void onRender();
 	void onCleanup();
 
 	double getFPS();
@@ -44,6 +43,8 @@ public:
 
 private:
 
+	void doClearRender();
+	void onRender();
 	void setConsoleModeToDefault();
 	void doFrameRate(double fTimeElapsed);
 	void lockFrameRate(Uint64 nLastTimeStamp);
