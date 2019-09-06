@@ -4,6 +4,8 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
+#include <string>
+
 struct POINT {
 	float x;
 	float y;
@@ -37,8 +39,8 @@ public:
 
 	Color setBackColor(Color newColor);
 	Color setForeColor(Color newColor);
-
 	Color fillBackground(Color newBackColor);
+	void setFont(std::string fontFileName, int pointSize);
 
 	void drawText(const char *text, int x, int y);
 

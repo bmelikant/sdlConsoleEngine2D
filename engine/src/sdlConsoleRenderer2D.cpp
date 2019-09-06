@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 const Color defaultBackColor = {0,0,0,255};
 const Color defaultForeColor = {180,180,180,255};
@@ -17,15 +18,20 @@ bool sdlConsoleEngineRenderer2D::init(SDL_Window *window) {
 		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION,"Error creating renderer: %s\n",SDL_GetError());
 		return false;
 	}
-	font = TTF_OpenFont("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",12);
-	if (font == NULL) {
-		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION,"Could lot load font");
+	if (TTF_Init() < 0) {
+		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION,"TTF library could not be initialized");
 		return false;
 	}
+
+	font = nullptr;
 	return true;
 }
 
 void sdlConsoleEngineRenderer2D::destroy() {
+	if (font != nullptr) {
+		TTF_CloseFont(font);
+	}
+	TTF_Quit();
 	SDL_DestroyRenderer(consoleRenderer);
 }
 
@@ -54,20 +60,35 @@ Color sdlConsoleEngineRenderer2D::fillBackground(Color newColor) {
 	SDL_RenderClear(consoleRenderer);
 }
 
+void sdlConsoleEngineRenderer2D::setFont(std::string fontFileName, int pointSize) {
+	TTF_Font *newFont = TTF_OpenFont(fontFileName.c_str(), pointSize);
+	if (newFont != nullptr) {
+		// free the old font and set the new one
+		TTF_CloseFont(font);
+		font = newFont;
+	} else {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"Could not open requested font: %s\n",fontFileName.c_str());
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"The error was: %s\n", TTF_GetError());
+	}
+}
+
 void sdlConsoleEngineRenderer2D::drawText(const char *text, int x, int y) {
-	SDL_Color textColor = foreColor;
-	SDL_Surface *textSurface = TTF_RenderText_Solid(font, text, textColor);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(consoleRenderer,textSurface);
+	// make sure we have a font open
+	if (font != nullptr) {
+		SDL_Color textColor = foreColor;
+		SDL_Surface *textSurface = TTF_RenderText_Solid(font, text, textColor);
+		SDL_Texture *texture = SDL_CreateTextureFromSurface(consoleRenderer,textSurface);
 
-	SDL_Rect textRect;
-	textRect.x = x;
-	textRect.y = y;
-	textRect.w = textSurface->w;
-	textRect.h = textSurface->h;
+		SDL_Rect textRect;
+		textRect.x = x;
+		textRect.y = y;
+		textRect.w = textSurface->w;
+		textRect.h = textSurface->h;
 
-	SDL_FreeSurface(textSurface);
-	SDL_RenderCopy(consoleRenderer, texture, NULL, &textRect);
-	SDL_DestroyTexture(texture);
+		SDL_FreeSurface(textSurface);
+		SDL_RenderCopy(consoleRenderer, texture, NULL, &textRect);
+		SDL_DestroyTexture(texture);
+	}
 }
 
 void sdlConsoleEngineRenderer2D::drawLine(Point src, Point dst) {

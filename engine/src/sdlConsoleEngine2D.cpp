@@ -103,6 +103,11 @@ bool sdlConsoleEngine2D::onInit() {
 		return false;
 	}
 
+	// need to call the user's onInit handler
+	if (onUserInit() == false) {
+		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION,"onUserInit() failed!");
+	}
+
 	// now let's clear and update the console renderer
 	renderer.clear();
 	renderer.update();
@@ -119,6 +124,7 @@ void sdlConsoleEngine2D::onEvent(SDL_Event *event) {
 	if (event->type == SDL_QUIT) {
 		running = false;
 	}
+	onUserEvent(event);
 }
 
 /**
@@ -126,6 +132,7 @@ void sdlConsoleEngine2D::onEvent(SDL_Event *event) {
  * should perform their work such as updating AI
  */
 void sdlConsoleEngine2D::onLoop(double fDeltaTime) {
+	onUserLoop(fDeltaTime);
 }
 
 /**

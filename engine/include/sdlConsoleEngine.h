@@ -33,15 +33,20 @@ public:
 	int onExecute();
 
 public:
-	bool onInit();
-	virtual void onEvent(SDL_Event *);
-	virtual void onLoop(double fDeltaTime);
-	void onCleanup();
-
+	/** these functions should be overridden in derived engines (duh!!!) */
+	virtual bool onUserInit() = 0;
+	virtual void onUserEvent(SDL_Event *) = 0;
+	virtual void onUserLoop(double fDeltaTime) = 0;
+	
 	double getFPS();
 	void setMaxFPS(int fMaxFPS);
 
 private:
+
+	bool onInit();
+	void onEvent(SDL_Event *);
+	void onLoop(double fDeltaTime);
+	void onCleanup();
 
 	void doClearRender();
 	void onRender();

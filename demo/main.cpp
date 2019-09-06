@@ -87,25 +87,51 @@ void Triangle::calculateCentroid() {
 class myDerivativeEngine : public sdlConsoleEngine2D {
 private:
 	Triangle t;
+	bool rotating;
 
 public:
 	myDerivativeEngine(int,int);
 
-	void onLoop(double fDeltaTime) override;
-	void onEvent(SDL_Event *event) override;
+	bool onUserInit() override;
+	void onUserLoop(double fDeltaTime) override;
+	void onUserEvent(SDL_Event *event) override;
 };
 
 myDerivativeEngine::myDerivativeEngine(int w, int h) : sdlConsoleEngine2D(w,h) {
+}
+
+bool myDerivativeEngine::onUserInit() {
+	// try to set the font for rendering
+	renderer.setFont("./resources/fonts/DejaVuSans-ExtraLight.ttf",14);
 	t.setPoints({120,150},{250,80},{200,300});
 	setMaxFPS(60);
+
+	rotating = true;
+	return true;
 }
 
-void myDerivativeEngine::onEvent(SDL_Event *event) {
-
+void myDerivativeEngine::onUserEvent(SDL_Event *event) {
+	if (event->type == SDL_KEYDOWN) {
+		switch (event->key.keysym.scancode) {
+			case SDL_SCANCODE_LEFT:
+				t.rotate(90.0f);
+				break;
+			case SDL_SCANCODE_RIGHT:
+				t.rotate(-90.0f);
+				break;
+			case SDL_SCANCODE_SPACE:
+				rotating = !rotating;
+				break;
+		}
+	}
 }
 
-void myDerivativeEngine::onLoop(double fDeltaTime) {
-	t.rotate(0.5f/fDeltaTime);
+void myDerivativeEngine::onUserLoop(double fDeltaTime) {
+	// draw a spinny triangle
+	if (rotating) {
+		t.rotate(0.5f/fDeltaTime);
+	}
+
 	renderer.setForeColor(COLOR_RED);
 	renderer.fillTriangle(t.a,t.b,t.c,COLOR_RED);
 
