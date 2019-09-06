@@ -49,11 +49,10 @@ public:
 	void drawTriangle(Point a, Point b, Point c, Color color);
 	void fillTriangle(Point a, Point b, Point c, Color color);
 
-	void fillFlatBottomTriangle(Point a, Point b, Point c, Color color);
-	void fillFlatTopTriangle(Point a, Point b, Point c, Color color);
-
 private:
 
+	void fillFlatBottomTriangle(Point a, Point b, Point c, Color color);
+	void fillFlatTopTriangle(Point a, Point b, Point c, Color color);
 };
 
 #endif

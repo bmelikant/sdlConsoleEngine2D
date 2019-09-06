@@ -90,10 +90,6 @@ void sdlConsoleEngineRenderer2D::drawTriangle(Point a, Point b, Point c, Color c
 	drawLine(a,c,color);
 }
 
-bool sortPointsByY(Point a, Point b) {
-	return (a.y > b.y);
-}
-
 void sortPoints(Point &one, Point &two, Point &three) {
 	if (one.y > two.y) {
 		Point temp = one;
@@ -112,10 +108,6 @@ void sdlConsoleEngineRenderer2D::fillTriangle(Point a, Point b, Point c, Color c
 	Point v1 = a, v2 = b, v3 = c;
 	sortPoints(v1,v2,v3);
 
-	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Point v1: %f", v1.y);
-	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Point v2: %f", v2.y);
-	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Point v3: %f", v3.y);
-
 	if (v2.y == v3.y) {
 		fillFlatBottomTriangle(v1,v2,v3,color);
 	} else if (v1.y == v2.y) {
@@ -126,7 +118,6 @@ void sdlConsoleEngineRenderer2D::fillTriangle(Point a, Point b, Point c, Color c
 			v2.y
 		};
 
-		SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Point v4: %f",v4.y);
 		fillFlatBottomTriangle(v1,v2,v4,color);
 		fillFlatTopTriangle(v2,v4,v3,color);
 	}
@@ -162,7 +153,7 @@ void sdlConsoleEngineRenderer2D::fillFlatTopTriangle(Point a, Point b, Point c, 
 
 	for (float lineY = c.y; lineY > a.y; lineY--) {
 		drawLine({xPointOne,lineY},{xPointTwo,lineY},color);
-		xPointOne += invslope1;
-		xPointTwo += invslope2;
+		xPointOne -= invslope1;
+		xPointTwo -= invslope2;
 	}
 }
