@@ -4,7 +4,10 @@ LDFLAGS:=$(shell pkg-config --libs sdl2 SDL2_ttf)
 ENGINE_ARCHIVE := libSDLEngine.a
 ENGINE_OBJECTS:=\
 	src/sdlConsoleEngine2D.o \
-	src/sdlConsoleRenderer2D.o
+	src/sdlConsoleRenderer2D.o \
+	src/shapes/shapeFactory.o \
+	src/shapes/shape.o \
+	src/shapes/triangle.o
 
 all: engine
 

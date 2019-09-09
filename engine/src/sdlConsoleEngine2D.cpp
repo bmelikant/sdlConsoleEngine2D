@@ -18,6 +18,9 @@ sdlConsoleEngine2D::sdlConsoleEngine2D() {
 	nFrameCount = 0;
 	fCurrentFps = 0.0f;
 	fLastFrameSample = 0.0f;
+
+	this->renderer = new sdlConsoleEngineRenderer2D();
+	this->shapeFactory = new ShapeFactory(renderer);
 }
 
 /**
@@ -95,7 +98,7 @@ bool sdlConsoleEngine2D::onInit() {
 	// and the main window (fullscreen at this point, can be overridden)
 	if (consoleWindow = SDL_CreateWindow("Console Engine 2D", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		nConsoleWidth,nConsoleHeight,nConsoleWindowFlags)) {
-		if (!renderer.init(consoleWindow)) {
+		if (!renderer->init(consoleWindow)) {
 			return false;
 		}
 	} else {
@@ -109,8 +112,8 @@ bool sdlConsoleEngine2D::onInit() {
 	}
 
 	// now let's clear and update the console renderer
-	renderer.clear();
-	renderer.update();
+	renderer->clear();
+	renderer->update();
 
 	return true;
 }
@@ -140,7 +143,7 @@ void sdlConsoleEngine2D::onLoop(double fDeltaTime) {
  */
 void sdlConsoleEngine2D::onRender() {
 	// redraw the window when a key is pressed
-	renderer.update();
+	renderer->update();
 }
 
 /**
@@ -151,7 +154,12 @@ void sdlConsoleEngine2D::onRender() {
 void sdlConsoleEngine2D::onCleanup() {
 	// pretty simple basic function: just quit SDL
 	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"onCleanup() called, deleting render context and window");
-	renderer.destroy();
+	renderer->destroy();
+
+	// this should be it. after cleanup the engine can free the console renderer and shapefactory
+	delete shapeFactory;
+	delete renderer;
+	
 	SDL_DestroyWindow(consoleWindow);
 	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"calling SDL_Quit()");
 	SDL_Quit();
@@ -208,5 +216,5 @@ void sdlConsoleEngine2D::lockFrameRate(Uint64 nLastTimeStamp) {
 }
 
 void sdlConsoleEngine2D::doClearRender() {
-	renderer.clear();
+	renderer->clear();
 }

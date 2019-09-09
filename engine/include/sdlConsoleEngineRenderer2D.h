@@ -5,23 +5,13 @@
 #include <SDL_ttf.h>
 
 #include <string>
-
-struct POINT {
-	float x;
-	float y;
-};
-
-using Point = struct POINT;
-using Color = SDL_Color;
-
-const Color COLOR_RED = {255,0,0,255};
-const Color COLOR_GREEN = {0,255,0,255};
-const Color COLOR_BLUE = {0,0,255,255};
-const Color COLOR_GREY = {128,128,128,0};
+#include "colors/colors.h"
+#include "shapes/point.h"
 
 class sdlConsoleEngineRenderer2D {
 private:
 	SDL_Renderer *consoleRenderer;
+	
 	TTF_Font *font;
 
 	Color backColor;

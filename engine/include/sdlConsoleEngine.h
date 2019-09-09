@@ -2,6 +2,7 @@
 #define _SDL_ENGINE_H
 
 #include "sdlConsoleEngineRenderer2D.h"
+#include "shapes/shapeFactory.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -25,7 +26,8 @@ private:
 
 protected:
 
-	sdlConsoleEngineRenderer2D renderer;
+	sdlConsoleEngineRenderer2D *renderer;
+	ShapeFactory *shapeFactory;
 
 public:
 	sdlConsoleEngine2D();
